@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Task Manager</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<main id="app" class="container">
+    <h1 id="page-heading">Task Manager</h1>
+
+    <form id="task-form" action="{{ url_for('add_task') }}" method="post">
+        <input id="task-input" type="text" name="task" placeholder="Enter a task"
+               maxlength="{{ max_length }}" value="{{ task_text or '' }}" autocomplete="off">
+        <button id="add-task-button" type="submit">Add Task</button>
+    </form>
+
+    {% if error %}
+    <p id="error-message" class="error">{{ error }}</p>
+    {% endif %}
+
+    {% if tasks %}
+    <ul id="task-list">
+        {% for task in tasks %}
+        <li id="task-{{ task.id }}" class="task-item">
+            <span id="task-text-{{ task.id }}" class="task-text">{{ task.title }}</span>
+            <form action="{{ url_for('delete_task', task_id=task.id) }}" method="post">
+                <button id="delete-task-{{ task.id }}" class="delete-button" type="submit">Delete</button>
+            </form>
+        </li>
+        {% endfor %}
+    </ul>
+    {% else %}
+    <p id="empty-message" class="empty">No tasks yet. Add your first task above.</p>
+    {% endif %}
+</main>
+</body>
+</html>
